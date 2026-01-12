@@ -1,0 +1,41 @@
+<div class="action-bar">
+  <button type="button" (click)="addSection()">Add Section</button>
+</div>
+
+@for (sec of sections; track sec.id; let i = $index) {
+  <div class="section-box">
+    <div class="section-header">
+      <button (click)="addInput(sec)">+ Input</button>
+      <h3>Section {{ i + 1 }}</h3>
+      <button class="btn-delete" (click)="removeSection(sec.id)" [disabled]="sections.length === 1">
+        Delete Section
+      </button>
+    </div>
+
+    <div class="input-list">
+      @for (inp of sec.inputs; track inp.id; let j = $index) {
+        <div class="input-item">
+          <label [for]="'inp-' + inp.id">Number {{ j + 1 }}</label>
+
+          <input
+            [id]="'inp-' + inp.id"
+            type="number"
+            [value]="inp.value"
+            (input)="updateValue(inp, $any($event.target).valueAsNumber)"
+          />
+          <button
+            class="btn-delete-mini"
+            (click)="removeInput(sec, inp.id)"
+            [disabled]="sections.length === 1"
+          >
+            X
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="result-box">
+      <strong>Result: {{ calculateSum(sec) }}</strong>
+    </div>
+  </div>
+}
