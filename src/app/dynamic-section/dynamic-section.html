@@ -1,41 +1,82 @@
-<div class="action-bar">
-  <button type="button" (click)="addSection()">Add Section</button>
+<div class="-cmp-actions-bar" style="text-align: center">
+  <button
+    type="button"
+    class="app-cl-btn app-cl-primary app-cmd-add-section"
+    (click)="addSection()"
+  >
+    <i class="material-symbols-outlined">add_notes</i>
+    Section
+  </button>
 </div>
 
-@for (sec of sections; track sec.id; let i = $index) {
-  <div class="section-box">
-    <div class="section-header">
-      <button (click)="addInput(sec)">+ Input</button>
-      <h3>Section {{ i + 1 }}</h3>
-      <button class="btn-delete" (click)="removeSection(sec.id)" [disabled]="sections.length === 1">
-        Delete Section
-      </button>
-    </div>
+<main class="app-cmp-main-container">
+  @for (sec of sections; track sec.id; let i = $index) {
+    <article class="app-cmp-section">
+      <header>
+        <button
+          type="button"
+          class="app-cl-btn app-cl-primary app-cmd-add-number-input"
+          (click)="addInput(sec)"
+        >
+          <i class="material-symbols-outlined">input</i>
+          Input
+        </button>
 
-    <div class="input-list">
-      @for (inp of sec.inputs; track inp.id; let j = $index) {
-        <div class="input-item">
-          <label [for]="'inp-' + inp.id">Number {{ j + 1 }}</label>
-
-          <input
-            [id]="'inp-' + inp.id"
-            type="number"
-            [value]="inp.value"
-            (input)="updateValue(inp, $any($event.target).valueAsNumber)"
-          />
-          <button
-            class="btn-delete-mini"
-            (click)="removeInput(sec, inp.id)"
-            [disabled]="sections.length === 1"
+        <span style="font-size: 1.2rem; display: inline-flex; align-items: baseline">
+          <b
+            >Section <span class="app-title-section">{{ i + 1 }}</span></b
           >
-            X
-          </button>
-        </div>
-      }
-    </div>
+        </span>
 
-    <div class="result-box">
-      <strong>Result: {{ calculateSum(sec) }}</strong>
-    </div>
-  </div>
-}
+        <button
+          type="button"
+          class="app-cl-btn app-cl-warn app-cl-icon app-cmd-remove-section"
+          (click)="removeSection(sec.id)"
+          [disabled]="sections.length === 1"
+        >
+          <i class="material-symbols-outlined">delete_forever</i>
+        </button>
+      </header>
+
+      <div class="app-cl-column-container">
+        <section class="app-cmp-number-list">
+          @for (inp of sec.inputs; track inp.id; let j = $index) {
+            <div class="app-cmp-number">
+              <span style="display: inline-flex; align-items: baseline">
+                <b
+                  >Number <span class="app-title-number">{{ j + 1 }}</span></b
+                >
+                <input
+                  type="number"
+                  class="app-inp-number"
+                  [value]="inp.value"
+                  (input)="updateValue(inp, $any($event.target).valueAsNumber)"
+                />
+              </span>
+
+              <button
+                type="button"
+                class="app-cl-btn app-cl-warn app-cl-icon app-cmd-remove-number-input"
+                (click)="removeInput(sec, inp.id)"
+                [disabled]="sec.inputs.length === 1"
+              >
+                <i class="material-symbols-outlined">delete_forever</i>
+              </button>
+            </div>
+          }
+        </section>
+
+        <section>
+          <div class="app-cmp-number">
+            <span style="display: inline-flex; align-items: baseline">
+              <b>Result</b>
+              <output class="app-cl-number app-out-number">
+                {{ calculateSum(sec) | number }}
+              </output>
+            </span>
+          </div>
+        </section>
+      </div>
+    </article>
+  }
+</main>

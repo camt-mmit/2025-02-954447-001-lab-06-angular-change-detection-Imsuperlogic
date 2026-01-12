@@ -1,6 +1,7 @@
+import { DecimalPipe } from '@angular/common'; // ✅ 1. นำเข้า DecimalPipe
 import { Component } from '@angular/core';
 
-// 1. สร้าง Interface เพื่อกำหนดหน้าตาข้อมูล
+// Interface กำหนดหน้าตาข้อมูล
 interface InputItem {
   id: number;
   value: number;
@@ -14,35 +15,32 @@ interface Section {
 @Component({
   selector: 'app-dynamic-section',
   standalone: true,
-  imports: [], // ไม่ต้องใช้อะไรเพิ่ม เพราะเราใช้ Standard HTML Binding
+  imports: [DecimalPipe], // ✅ 2. ใส่ใน imports
   templateUrl: './dynamic-section.html',
-  styleUrl: './dynamic-section.scss', // หรือ .css แล้วแต่ตอนสร้าง
+  styleUrl: './dynamic-section.scss',
 })
 export class DynamicSection {
-  // Array เก็บรายการ Section ทั้งหมด
-  sections: Section[] = [];
+  // ✅ 3. ตัวแปรและฟังก์ชันต้องอยู่ข้างในวงเล็บปีกกานี้ทั้งหมด
 
-  // ตัวนับสำหรับสร้าง ID ไม่ซ้ำกัน (สำคัญมากสำหรับ track)
+  sections: Section[] = []; // เก็บรายการ Section
   nextSectionId = 1;
   nextInputId = 1;
 
   constructor() {
-    this.addSection();
+    this.addSection(); // สร้าง Section แรกทันทีที่เปิด
   }
 
   // --- Functions สำหรับ Section ---
   addSection() {
-    // 2. สร้าง Section พร้อมแถม Input: เปรียบเสมือนบรรทัด 130 (สั่งสร้าง Input ทันที)
     this.sections.push({
       id: this.nextSectionId++,
       inputs: [
-        { id: this.nextInputId++, value: 0 }, // ✅ ใส่ Input เริ่มต้นให้เลย 1 อัน
+        { id: this.nextInputId++, value: 0 }, // แถม Input 1 อัน
       ],
     });
   }
 
   removeSection(id: number) {
-    // ลบ Section ที่มี id ตรงกันออก
     this.sections = this.sections.filter((sec) => sec.id !== id);
   }
 
@@ -67,4 +65,4 @@ export class DynamicSection {
   calculateSum(section: Section): number {
     return section.inputs.reduce((sum, item) => sum + item.value, 0);
   }
-}
+} // ✅ 4. ปิดท้าย Class ตรงนี้
